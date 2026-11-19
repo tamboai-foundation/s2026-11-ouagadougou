@@ -1,5 +1,5 @@
 // Chargement du core Kotlin/Wasm (TModeler) : initialisation seulement + modèle d'exemple Note.
-// Le core est construit par `npm run core:build` puis copié par `npm run sync:core` dans public/core.
+// Le core est construit par `npm run core:build` puis copié par `npm run sync:core` dans src/core.
 // Sans lui, l'interface fonctionne quand même avec les mocks.
 import { DB_NAME } from './config'
 
@@ -13,8 +13,10 @@ let core: NGomaCore | null = null
 
 export async function startTModeler(): Promise<boolean> {
   try {
-    const url = `${import.meta.env.BASE_URL}core/ngoma-core-web-wasm-js.mjs`
-    const mod = await import(/* @vite-ignore */ url)
+    // Présent seulement après npm run sync:core : sans lui, aucune erreur, l'interface reste sur les mocks
+    const load = Object.values(import.meta.glob<{ default?: unknown }>('../core/ngoma-core-web-wasm-js.mjs'))[0]
+    if (!load) return false
+    const mod = await load()
     const c = (mod.default ?? mod) as NGomaCore
     if (!c.ngomaInit(DB_NAME)) return false
     core = c
