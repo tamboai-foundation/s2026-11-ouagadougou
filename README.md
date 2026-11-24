@@ -28,3 +28,4 @@ Posez vos questions à votre Team Lead, puis à la formation (contact@tamboai.co
 - Test Git : Landry yepmo
 - Test Git :  Dimitri AKPAKOUN
 - Test Git : Alpha Moumouni OUEDRAOGO
+- Test Git : Sergiana Francourt RAVELOMANANTSOA
