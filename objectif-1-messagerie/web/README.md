@@ -24,5 +24,5 @@ Splash de chargement, connexion / inscription, liste des conversations (recherch
 npm run core:build
 npm run sync:core
 ```
-  Le core est copié dans `public/core` et chargé par `src/lib/tm.ts` ; sans lui l'interface marche avec les mocks.
+  Le core est copié dans `src/core` (jamais dans `public/` : Vite refuse d'y importer du code) et chargé par `src/lib/tm.ts` ; sans lui l'interface marche avec les mocks.
 - Règles TModeler web : `TextField` / `BoolField` avec `.default(...)` ; nom de base = nom + version (`DB_VERSION` dans `NGomaCore.kt`, l'incrémenter repart d'une base vide).
