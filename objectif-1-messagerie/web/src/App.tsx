@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { accountBridge, messagingBridge, type User } from './lib/bridge'
+import { accountBridge, type User } from './lib/bridge'
 import { startTModeler } from './lib/tm'
 import Splash from './components/Splash'
 import Auth from './components/Auth'
-import Home from './components/Home'
+import Shell from './components/Shell'
 
 type Phase = 'splash' | 'auth' | 'home'
 
@@ -37,9 +37,8 @@ export default function App() {
     )
   }
   return (
-    <Home
+    <Shell
       user={user}
-      bridge={messagingBridge}
       onLogout={async () => {
         await accountBridge.logout()
         setUser(null)

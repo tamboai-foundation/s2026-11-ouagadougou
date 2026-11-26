@@ -5,7 +5,7 @@ import ConversationView from './ConversationView'
 const FILTERS = ['Toutes', 'Non lues', 'Épinglées', 'Archivées'] as const
 type Filter = (typeof FILTERS)[number]
 
-export function useBridge<T>(bridge: MessagingBridge, read: () => T): T {
+export function useBridge<T>(bridge: { subscribe(listener: () => void): () => void }, read: () => T): T {
   // Les mocks émettent à chaque changement : on force un nouveau rendu et on relit l'état du pont.
   const [version, setVersion] = useState(0)
   useEffect(() => bridge.subscribe(() => setVersion((v) => v + 1)), [bridge])
@@ -26,7 +26,7 @@ export function Avatar({ name, size = 44 }: { name: string; size?: number }) {
   )
 }
 
-export default function Home({ user, bridge, onLogout }: { user: User; bridge: MessagingBridge; onLogout: () => void }) {
+export default function Home({ user, bridge, onLogout, openChatWith, onChatOpened }: { user: User; bridge: MessagingBridge; onLogout: () => void; openChatWith?: string | null; onChatOpened?: () => void }) {
   const convs = useBridge(bridge, () => bridge.conversations())
   const [selected, setSelected] = useState<number | null>(null)
   const [query, setQuery] = useState('')
@@ -44,6 +44,14 @@ export default function Home({ user, bridge, onLogout }: { user: User; bridge: M
     .sort((a, b) => Number(b.pinned) - Number(a.pinned))
 
   const current = convs.find((c) => c.id === selected)
+
+  // « Écrire un message » depuis l'écran Personnes : ouvre la conversation de cette personne (la crée si besoin).
+  useEffect(() => {
+    if (!openChatWith) return
+    const existing = bridge.conversations().find((c) => c.title === openChatWith)
+    setSelected(existing ? existing.id : bridge.createConversation(openChatWith))
+    onChatOpened?.()
+  }, [openChatWith, bridge, onChatOpened])
 
   function newConversation() {
     const title = window.prompt('Nom de la conversation')?.trim()
