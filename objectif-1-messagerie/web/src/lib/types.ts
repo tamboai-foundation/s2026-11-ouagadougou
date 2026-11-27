@@ -1,4 +1,13 @@
-export type User = { id: number; name: string; bio?: string; joinedAt?: number }
+export type UserStatus = 'active' | 'inactive' | 'suspended'
+
+export type User = {
+  id: number
+  name: string
+  bio?: string
+  photo?: string
+  status?: UserStatus
+  joinedAt?: number
+}
 
 export type Message = {
   id: number
